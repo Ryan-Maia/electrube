@@ -85,14 +85,16 @@
 	#Retngulo_4:hover {
 		fill: yellow;
 	}
-
 	.Retngulo_4 {
 		position: absolute;
 		overflow: visible;
-		width: 17px;
-		height: 17px;
+		width: 18px;
+		height: 18px;
 		left: 979px;
 		top: 4px;
+	}
+	.Retngulo_4:hover {
+		fill: yellow;
 	}
 	#Grupo_1 {
 		position: absolute;
@@ -101,6 +103,9 @@
 		left: 982.347px;
 		top: 7.347px;
 		overflow: visible;
+	}
+	#Grupo_1:hover {
+		fill: yellow;
 	}
 	#Linha_1 {
 		fill: transparent;
@@ -116,8 +121,8 @@
 		position: absolute;
 		width: 11.72px;
 		height: 11.72px;
-		left: 0px;
-		top: 0px;
+		left: 982px;
+		top: 7px;
 		transform: matrix(1,0,0,1,0,0);
 	}
 	#Linha_2 {
@@ -134,8 +139,8 @@
 		position: absolute;
 		width: 11.72px;
 		height: 11.72px;
-		left: 0px;
-		top: 0px;
+		left: 982px;
+		top: 7px;
 		transform: matrix(1,0,0,1,0,0);
 	}
 	#Grupo_2 {
@@ -152,7 +157,7 @@
 	.Retngulo_5 {
 		position: absolute;
 		overflow: visible;
-		width: 17px;
+		width: 18px;
 		height: 17px;
 		left: 0px;
 		top: 0px;
@@ -334,16 +339,14 @@
 		-webkit-user-select: none;
 		-webkit-app-region: drag;
 	}
-
 	.titlebar-button {
 		-webkit-app-region: no-drag;
 	}
-	.btn-close:hover > svg{
-		fill:#E4E4E4;
+	#closeButton:hover {
+		fill: yellow;
 	}
-	#Grupo_1:hover{
-		fill:rgba(217,83,79,1);
-		color:rgba(217,83,79,1);
+	#btnFechar:hover {
+		fill: yellow;
 	}
 </style>
 
@@ -367,27 +370,20 @@
 	</svg>
 
 	<!--|||||||||||||||| Botão de fechar ||||||||||||||||-->
-	<div id="closeButton">
-		
-
-
+	<g id="btnFechar">
 		<svg class="Retngulo_4 titlebar-button">
-			<rect id="Retngulo_4" rx="0" ry="0" x="0" y="0" width="17" height="17">
+			<rect class="Retngulo_4" rx="0" ry="0" x="0" y="0" width="17" height="17">
 			</rect>
 		</svg>
-		<div id="Grupo_1">
-			<svg class="Linha_1" viewBox="0 0 10.306 10.306">
-				<path id="Linha_1" d="M 0 10.3057861328125 L 10.3057861328125 0">
-				</path>
-			</svg>
-			<svg class="Linha_2" viewBox="0 0 10.306 10.306">
-				<path id="Linha_2" d="M 10.3057861328125 10.3057861328125 L 0 0">
-				</path>
-			</svg>
-		</div>
-
-		
-	</div>
+		<svg class="Linha_1" viewBox="0 0 10.306 10.306">
+			<path id="Linha_1" d="M 0 10.3057861328125 L 10.3057861328125 0">
+			</path>
+		</svg>
+		<svg class="Linha_2" viewBox="0 0 10.306 10.306">
+			<path id="Linha_2" d="M 10.3057861328125 10.3057861328125 L 0 0">
+			</path>
+		</svg>
+	</g>	
 	<!-- |||||||||||||||||||||||||||||||||||||||||||||||| -->
 	<div id="Grupo_2">
 		<svg class="Retngulo_5 titlebar-button btn-minimize">
