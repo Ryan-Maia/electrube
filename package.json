@@ -1,0 +1,30 @@
+{
+  "name": "elecrtube",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron main.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^8.1.1"
+  },
+  "dependencies": {
+    "axios": "^0.19.2",
+    "bootstrap": "^4.4.1",
+    "electron-packager": "^15.2.0",
+    "https": "^1.0.0",
+    "jquery": "^3.4.1",
+    "lodash": "^4.17.15",
+    "node-gyp": "^7.1.2",
+    "popper.js": "^1.16.1",
+    "rebuild": "^0.1.2",
+    "rimraf": "^3.0.2",
+    "vue": "^2.6.11",
+    "youtube-dl": "^3.1.0"
+  }
+}

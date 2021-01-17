@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+        <title>popcorn</title>
+        <script src="assets/js/jquery.min.js"></script>
+        <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+        <link rel="stylesheet" href="assets/css/styles.css">
+    </head>
+
+    <body style="background-color: rgb(0,0,0);color: rgb(246,250,255);">
+
+        <div class="container-fluid">
+            <div class="row" style="background-color: #0d0d0d;">
+                <div class="col text-center" style="padding: 13px;">
+                    <h1 style="color: rgb(255,87,88);"><strong>ElecTrube</strong><img src="assets/img/logo-sem-fundo.png" style="width: 60px;"></h1>
+                </div>
+            </div>
+        </div>
+        
+        
+        <div class="group">      
+            <input id="url" type="text" required>
+            <span class="highlight"></span>
+            <span class="bar"></span>
+            <label>Url</label>
+        </div>    
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col text-center">
+                    <img id="wow" class="thumbnail">
+                </div>
+            </div>
+        </div>
+        
+        <center>
+            <a id="download" onclick="baixar()" class="btn btn-2"><span>Baixar Vídeo</span></a>            
+        </center>
+        <center>
+            <a id="download" onclick="baixar()" class="btn btn-2"><span>Baixar Áudio</span></a>
+        </center>
+                
+        
+        <script>
+            var $ = require('jQuery');
+            const { ipcRenderer } = require('electron')
+
+            $(function(){
+                $("#download").hide();
+                $("#url").keyup(()=>{
+                    let videoUrl = $("#url").val();
+                    let videoId = videoUrl.split('?v=').pop().split('&')[0];
+                    $.ajax({
+                        url: `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
+                        context: document.body
+                    }).done(function(){
+                        getThumbnail();
+                        $("#download").show();
+                    }).catch(function() {
+                        $("#download").hide();
+                    });
+                });
+            });
+            function baixar(){
+                let videoUrl = $("#url").val();
+                let videoId = videoUrl.split('?v=').pop().split('&')[0];
+                ipcRenderer.send('downloadVideo',{ "url":videoUrl, "id": videoId });
+            }
+            function getThumbnail(){
+                let videoUrl = $("#url").val();
+                let videoId = videoUrl.split('?v=').pop().split('&')[0];
+                let thumbUrl = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+                // $("body").css("background-image", `url(${thumbUrl})`);
+                $("#wow")[0].src = thumbUrl;
+            }
+
+            
+        </script>
+    </body>
+
+</html>
