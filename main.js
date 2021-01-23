@@ -108,7 +108,7 @@ ipcMain.on('downloadVideo',(e,data)=>{
         downloadVideo(data)
     });
 })
-ipcMain.on('getTitle',async(e,data)=>{
+ipcMain.on('getTitle',(e,data)=>{
   try{
     console.log(data);
     //const video = await youtubedl(data.url,['--format=18'])
