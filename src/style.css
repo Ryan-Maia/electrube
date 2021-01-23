@@ -92,7 +92,8 @@ td, tr{
     border:none;
     border-radius: 0px;
     font-size:18px;
-    color:#F7F7F7
+    color:#F7F7F7;
+    transition: 600ms;
 }
 .body-url-span{
     font-family: Norwester;

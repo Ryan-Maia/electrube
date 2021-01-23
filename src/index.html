@@ -38,11 +38,11 @@
                 <br>
                 <div class="row">
                     <div class="col-5">
-                        <img src="https://img.youtube.com/vi/9kzSJqIkGnY/maxresdefault.jpg" height="220px" class="float-left">
+                        <img id="thumbnail" height="220px" class="float-left">
                     </div>
                     <div class="col">
                         <div class="form-group">
-                            <input id="url" type="text" class="form-control body-url-input col-10" placeholder="Titulo">
+                            <span id="viteoTitle" type="text" class="body-url-input" style="display:block;font-family: Norwester;transition: 500ms;" placeholder="Titulo" readonly="true"></span>
                         </div>
                         <br>
                         <div class="form-group">
@@ -57,7 +57,7 @@
                 <br/>
                 <div class="row justify-content-center">
                     <div class="col-2">   
-                        <button class="body-button">Download</button>
+                        <button id="download" class="body-button">Download</button>
                     </div>
                 </div>
             </div>
@@ -66,9 +66,31 @@
     </body>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
     <script>
+        var $ = require('jQuery');
         const electron = require('electron');
         const { ipcRenderer } = electron;
         
+        $(function(){
+            $("#download").hide();
+            $("#url").keyup(()=>{
+                let videoUrl = $("#url").val();
+                let videoId = videoUrl.split('?v=').pop().split('&')[0];
+                $.ajax({
+                    url: `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
+                    context: document.body
+                }).done(async function(){
+                    $(".body-url-input").css('color','#d9af4f');
+                    getThumbnail();
+                    $("#download").show();
+                    
+                    await ipcRenderer.send('getTitle',{'id':videoId,'url':videoUrl});
+                }).catch(function() {
+                    $(".body-url-input").css('color','#F7F7F7');
+                    $("#download").hide();
+                });
+            });
+        });
+
         function closeWindow(){
             ipcRenderer.send('closeWindow');
         }
@@ -78,9 +100,11 @@
         function getThumbnail(){
             let videoUrl = $("#url").val();
             let videoId = videoUrl.split('?v=').pop().split('&')[0];
-            let thumbUrl = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
-            // $("body").css("background-image", `url(${thumbUrl})`);
+            let thumbUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;        
             $("#thumbnail")[0].src = thumbUrl;
         }
+        ipcRenderer.on('videoTitle', (event, arg) => {
+            $("#viteoTitle")[0].innerHTML = arg.title;
+        })
     </script>
 </html>

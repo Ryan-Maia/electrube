@@ -108,6 +108,20 @@ ipcMain.on('downloadVideo',(e,data)=>{
         downloadVideo(data)
     });
 })
+ipcMain.on('getTitle',(e,data)=>{
+  try{
+    const video = youtubedl(data.url,['--format=18'],{ cwd: __dirname })
+    video.on('info', function(info) {
+      let nome = info._filename.replace("-"+data.id,"");
+      nome = nome.replace(".mp4","");
+      e.sender.send('videoTitle',{title:nome});
+    });
+  }
+  catch(e){
+
+  }
+  
+})
 
 function downloadVideo(data) {
     const video = youtubedl(data.url,['--format=18'],{ cwd: __dirname })
