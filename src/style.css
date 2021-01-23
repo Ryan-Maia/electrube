@@ -6,7 +6,16 @@ body{
 body::-webkit-scrollbar {
     display: none;
 }
-
+.form-control{
+    color: #F7F7F7;
+    font-family: Norwester;
+}
+.form-control:focus{
+    background-color: #444444;
+    color: #F7F7F7;
+    box-shadow: 0 0 1px 3px rgba(220, 53, 69, 0.5);
+    
+}
 input:focus{
     outline: none;
 }
@@ -85,4 +94,8 @@ td, tr{
     font-size:18px;
     color:#F7F7F7
 }
-
+.body-url-span{
+    font-family: Norwester;
+    font-size:25px;
+    color: #D9534F;
+}
