@@ -1,7 +1,12 @@
 body{
     margin:0 0 0 0;
     background-color: #303030;
+    overflow-y: hidden;
 }
+body::-webkit-scrollbar {
+    display: none;
+}
+
 input:focus{
     outline: none;
 }
@@ -80,3 +85,4 @@ td, tr{
     font-size:18px;
     color:#F7F7F7
 }
+
