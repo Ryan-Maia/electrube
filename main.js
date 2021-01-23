@@ -93,8 +93,12 @@ function createWindow(){
 
 }
 
-ipcMain.on('checkUrl',(e,data)=>{
-    
+ipcMain.on('closeWindow',(e,data)=>{
+    // mainWindow.hide(); PRODUCTION
+    force_quit = true; app.quit(); //DEBUG
+})
+ipcMain.on('minimizeWindow',(e,data)=>{
+  mainWindow.minimize();
 })
 
 ipcMain.on('downloadVideo',(e,data)=>{
