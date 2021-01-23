@@ -99,3 +99,26 @@ td, tr{
     font-size:25px;
     color: #D9534F;
 }
+.body-button{
+    font-family: Norwester;
+    background-color: #444444;
+    font-size:25px;
+    color: #D9534F;
+    border: none;
+    padding: 8px 15px 8px 15px;
+    transition: 400ms;
+}
+.body-button:focus{
+    background-color: #444444;
+    font-size:25px;
+    color: #D9534F;
+    box-shadow: none;
+    border: none;
+    outline: none !important;
+}
+.body-button:hover{
+    background-color: #D9534F;
+    color: #F7F7F7;
+    
+    transition: 400ms;
+}
