@@ -127,6 +127,19 @@ ipcMain.on('getTitle',(e,data)=>{
   
 })
 
+ipcMain.on('getFormats',(e,data) =>{
+  youtubedl.getInfo(data.url, function(err, info) {
+    let formatos = info.formats.map((e)=>{
+      return {
+        'format_id':e.format_id,
+        'format':e.ext,
+        'resolution':e.height
+      }
+    });
+    e.sender.send('videoFormats',{formats:formatos});
+  });
+});
+
 function downloadVideo(data) {
     const video = youtubedl(data.url,['--format=18'],{ cwd: __dirname })
     video.on('info', function(info) {

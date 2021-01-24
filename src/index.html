@@ -82,7 +82,7 @@
                     $(".body-url-input").css('color','#d9af4f');
                     getThumbnail();
                     $("#download").show();
-                    
+                    ipcRenderer.send('getFormats',{'id':videoId,'url':videoUrl});
                     ipcRenderer.send('getTitle',{'id':videoId,'url':videoUrl});
                 }).catch(function() {
                     $(".body-url-input").css('color','#F7F7F7');
@@ -106,6 +106,9 @@
         }
         ipcRenderer.on('videoTitle', (event, arg) => {
             $("#viteoTitle")[0].innerHTML = arg.title;
+        })
+        ipcRenderer.on('videoFormats',(event,arg)=>{
+            console.log(arg);
         })
         function donwloadVideo(){
             let videoUrl = $("#url").val();
