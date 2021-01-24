@@ -46,7 +46,9 @@
                         </div>
                         <br>
                         <div class="form-group">
-                            <input id="url" type="text" class="form-control body-url-input col-10" placeholder="Formatos">
+                            <select id="formats" class="form-control body-url-input col-10">
+                            </select>
+                            <!-- <input id="url" type="text" class="form-control body-url-input col-10" placeholder="Formatos"> -->
                         </div>
                         <br>
                         <div class="form-group">
@@ -108,12 +110,20 @@
             $("#viteoTitle")[0].innerHTML = arg.title;
         })
         ipcRenderer.on('videoFormats',(event,arg)=>{
+            $("#formats").html('');
+            let option = '';
+            console.log(arg);
+            arg.formats.map((format)=>{
+                option = `<option value = '${format.format_id}'>${format.resolution} - ${format.format}</option>`;
+                $("#formats").append(option);
+            })
             console.log(arg);
         })
         function donwloadVideo(){
             let videoUrl = $("#url").val();
             let videoId = videoUrl.split('?v=').pop().split('&')[0];
-            ipcRenderer.send('downloadVideo',{ "url":videoUrl, "id": videoId });
+            let videoFormatId = $("#formats").val();
+            ipcRenderer.send('downloadVideo',{ "url":videoUrl, "id": videoId, "format_id": videoFormatId});
         }
     </script>
 </html>

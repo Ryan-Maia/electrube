@@ -141,7 +141,7 @@ ipcMain.on('getFormats', (e, data) => {
 });
 
 function downloadVideo(data) {
-	const video = youtubedl(data.url, ['--format=18'], { cwd: __dirname })
+	const video = youtubedl(data.url, [`--format=${data.format_id}`], { cwd: __dirname })
 	video.on('info', function (info) {
 
 		let nome = info._filename.replace("-" + data.id, "");
