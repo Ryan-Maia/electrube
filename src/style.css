@@ -107,7 +107,6 @@ td, tr{
     color: #D9534F;
     border: none;
     padding: 8px 15px 8px 15px;
-    transition: 400ms;
 }
 .body-button:focus{
     background-color: #444444;
@@ -120,6 +119,13 @@ td, tr{
 .body-button:hover{
     background-color: #D9534F;
     color: #F7F7F7;
-    
     transition: 400ms;
+}
+.body-button:active{
+    background-color: #F7F7F7;
+    font-size:25px;
+    color: #D9534F;
+    box-shadow: none;
+    border: none;
+    outline: none !important;
 }

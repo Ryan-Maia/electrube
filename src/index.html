@@ -42,7 +42,7 @@
                     </div>
                     <div class="col">
                         <div class="form-group">
-                            <span id="viteoTitle" type="text" class="body-url-input" style="display:block;font-family: Norwester;transition: 500ms;" placeholder="Titulo" readonly="true"></span>
+                            <span id="viteoTitle" type="text" class="body-url-input" style="color:#6C757D;display:block;font-family: Norwester;transition: 500ms;" readonly="true">Titulo</span>
                         </div>
                         <br>
                         <div class="form-group">
@@ -57,7 +57,7 @@
                 <br/>
                 <div class="row justify-content-center">
                     <div class="col-2">   
-                        <button id="download" class="body-button">Download</button>
+                        <button id="download" class="body-button" onclick="donwloadVideo()">Download</button>
                     </div>
                 </div>
             </div>
@@ -86,6 +86,7 @@
                     ipcRenderer.send('getTitle',{'id':videoId,'url':videoUrl});
                 }).catch(function() {
                     $(".body-url-input").css('color','#F7F7F7');
+                    $("#viteoTitle").text('Titulo');
                     $("#download").hide();
                 });
             });
@@ -100,11 +101,16 @@
         function getThumbnail(){
             let videoUrl = $("#url").val();
             let videoId = videoUrl.split('?v=').pop().split('&')[0];
-            let thumbUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;        
+            let thumbUrl = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;        
             $("#thumbnail")[0].src = thumbUrl;
         }
         ipcRenderer.on('videoTitle', (event, arg) => {
             $("#viteoTitle")[0].innerHTML = arg.title;
         })
+        function donwloadVideo(){
+            let videoUrl = $("#url").val();
+            let videoId = videoUrl.split('?v=').pop().split('&')[0];
+            ipcRenderer.send('downloadVideo',{ "url":videoUrl, "id": videoId });
+        }
     </script>
 </html>
