@@ -128,14 +128,23 @@ ipcMain.on('getTitle', (e, data) => {
 })
 
 ipcMain.on('getFormats', (e, data) => {
-	youtubedl.getInfo(data.url, function (err, info) {
+	youtubedl.getInfo(data.url, [`--format=mp4`], function (err, info) {
+    console.log(info.formats);
 		let formatos = info.formats.map((e) => {
 			return {
 				'format_id': e.format_id,
 				'format': e.ext,
-				'resolution': e.height
+        'resolution': e.height,
+        'audio' : e.acodec
 			}
-		});
+    });
+    formatos = formatos.filter((item) => item.format == "mp4" && item.audio != "none")
+    formatos.unshift({
+      'format_id': 140,
+      'format': 'MP3',
+      'resolution': 'Audio',
+      'audio' : 'MP3'
+    })
 		e.sender.send('videoFormats', { formats: formatos });
 	});
 });
