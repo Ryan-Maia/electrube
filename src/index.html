@@ -123,7 +123,9 @@
             let videoUrl = $("#url").val();
             let videoId = videoUrl.split('?v=').pop().split('&')[0];
             let videoFormatId = $("#formats").val();
-            ipcRenderer.send('downloadVideo',{ "url":videoUrl, "id": videoId, "format_id": videoFormatId});
+            let format = $("#formats option:selected").text()
+            format = format.substring(format.length-3)
+            ipcRenderer.send('downloadVideo',{ "url":videoUrl, "id": videoId, "format_id": videoFormatId, "format":format});
         }
     </script>
 </html>

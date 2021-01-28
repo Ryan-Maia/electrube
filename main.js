@@ -5,12 +5,19 @@ const youtubedl = require('youtube-dl');
 const rimraf = require("rimraf");
 const https = require("https");
 const fs = require('fs');
+const md5 = require('md5');
+const ffmpeg = require('fluent-ffmpeg');
+const { CLIENT_RENEG_LIMIT } = require("tls");
 
 
 let force_quit = null;
 let tray = null;
 let mainWindow = null;
 let checkFirstInstance = app.requestSingleInstanceLock();
+
+ffmpeg.setFfmpegPath('./ffmpeg/bin/ffmpeg.exe');
+ffmpeg.setFfprobePath('./ffmpeg/bin/ffprobe.exe')
+ffmpeg.setFlvtoolPath('./ffmpeg/bin/ffplay.exe');
 // if is the first instance = true; else = false.
 
 //-----------------------------------------------------------//
@@ -28,6 +35,12 @@ if (!checkFirstInstance) {
 app.whenReady().then(() => {
 	if (!fs.existsSync('./imagens')) {
 		fs.mkdirSync('./imagens');
+	}
+	if (!fs.existsSync('./Videos')) {
+		fs.mkdirSync('./Videos');
+	}
+	if (!fs.existsSync('./temp')) {
+		fs.mkdirSync('./temp');
 	}
 	//----------------------------------//
 	//----------- Tray Setup -----------//
@@ -129,18 +142,19 @@ ipcMain.on('getTitle', (e, data) => {
 
 ipcMain.on('getFormats', (e, data) => {
 	youtubedl.getInfo(data.url, [`--format=mp4`], function (err, info) {
-    console.log(info.formats);
+    //console.log(info.formats);
 		let formatos = info.formats.map((e) => {
 			return {
 				'format_id': e.format_id,
 				'format': e.ext,
-        'resolution': e.height,
-        'audio' : e.acodec
+				'resolution': e.height,
+				'audio' : e.acodec,
+				'filesize': e.filesize
 			}
     });
-    formatos = formatos.filter((item) => item.format == "mp4" && item.audio != "none")
+    formatos = formatos.filter((item) => item.filesize != null)
     formatos.unshift({
-      'format_id': 140,
+      'format_id': 18,
       'format': 'MP3',
       'resolution': 'Audio',
       'audio' : 'MP3'
@@ -150,24 +164,50 @@ ipcMain.on('getFormats', (e, data) => {
 });
 
 function downloadVideo(data) {
+	let temp = new Date().getTime()
+	temp = md5(temp);
+
 	const video = youtubedl(data.url, [`--format=${data.format_id}`], { cwd: __dirname })
 	video.on('info', function (info) {
 
 		let nome = info._filename.replace("-" + data.id, "");
 		let icone = `./imagens/${data.id}.jpg`
-
+		
 		console.log('Download started');
 		console.log('filename: ' + nome);
 		console.log('size: ' + info.size);
 
 
-		video.pipe(fs.createWriteStream('./videos/' + nome))
+
+		//video.pipe(fs.createWriteStream('./videos/' + nome))
+		video.pipe(fs.createWriteStream('./temp/video' + temp))
+
 
 		video.on('end', function () {
-			showNotification("Download Concluido", "O Download do video " + nome + " foi finalizado com sucesso", icone);
+			console.log(data);
+			if(data.format_id == 18 && data.format == 'MP3'){
+				nome = nome.replace("mp4","mp3")
+				ffmpeg('./temp/video' + temp).toFormat('mp3').save('./Videos/'+nome).on("end", function() {
+					showNotification("Download Concluido", "O Download do video " + nome + " foi finalizado com sucesso", icone);
+					fs.unlink('./temp/video' + temp,() => {})
+				})
+			} else {
+				const audio = youtubedl(data.url, [`--format=${18}`], { cwd: __dirname })
+				audio.on('info', function (info) {
+					audio.pipe(fs.createWriteStream('./temp/audio' + temp))
+				})
+				audio.on('end', function () {
+					ffmpeg('./temp/video' + temp).addInput('./temp/audio' + temp).save("./Videos/"+nome).on("end", function() {
+						showNotification("Download Concluido", "O Download do video " + nome + " foi finalizado com sucesso", icone);
+						fs.unlink('./temp/video' + temp,() => {})
+						fs.unlink('./temp/audio' + temp,() => {})
+					})
+				})
+			}
 		})
-
 	})
+
+
 }
 
 function showNotification(titulo, corpo, icone) {
