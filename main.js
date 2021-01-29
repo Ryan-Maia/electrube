@@ -7,6 +7,7 @@ const https = require("https");
 const fs = require('fs');
 const md5 = require('md5');
 const ffmpeg = require('fluent-ffmpeg');
+const moment = require('moment')
 const { CLIENT_RENEG_LIMIT } = require("tls");
 
 
@@ -152,7 +153,7 @@ ipcMain.on('getFormats', (e, data) => {
 				'filesize': e.filesize
 			}
     });
-    formatos = formatos.filter((item) => item.filesize != null)
+    formatos = formatos.filter((item) => item.filesize != null && item.format == "mp4")
     formatos.unshift({
       'format_id': 18,
       'format': 'MP3',
@@ -197,11 +198,48 @@ function downloadVideo(data) {
 					audio.pipe(fs.createWriteStream('./temp/audio' + temp))
 				})
 				audio.on('end', function () {
-					ffmpeg('./temp/video' + temp).addInput('./temp/audio' + temp).save("./Videos/"+nome).on("end", function() {
-						showNotification("Download Concluido", "O Download do video " + nome + " foi finalizado com sucesso", icone);
-						fs.unlink('./temp/video' + temp,() => {})
-						fs.unlink('./temp/audio' + temp,() => {})
-					})
+					if (data.cortes != "") {
+						let cortes = ffmpeg()
+						ffmpeg('./temp/video' + temp).addInput('./temp/audio' + temp).save('./temp/corte' + temp + '.mp4').on("end", async function() {
+							fs.unlink('./temp/video' + temp,() => {})
+							fs.unlink('./temp/audio' + temp,() => {})
+
+							let arrCortes = data.cortes.split(";")
+							
+							for (const [i, item] of arrCortes.entries()){
+								let corte = item.split("-");
+								let inicio = moment("1111-11-11 " + corte[0])
+								let fim = moment("1111-11-11 " + corte[1])
+								let diff = fim.diff(inicio);
+								let duracao = moment.utc(diff).format("HH:mm:ss");
+
+								//console.log('corte na posicao 0: '+corte[0]);
+								//console.log('duracao: '+ duracao);
+								//console.log('caminho inteiro do corte: '+ "./temp/corte" + temp + i);
+								await new Promise((resolve,reject) => {
+
+									ffmpeg("./temp/corte" + temp + '.mp4').setStartTime(corte[0]).setDuration(duracao).save("./temp/corte" + temp + i + '.mp4').on("end", function(){
+										console.log("um ja foi");
+										cortes.addInput("./temp/corte" + temp + i + '.mp4')
+										resolve();
+									})
+								})
+							}
+
+							cortes.mergeToFile("./Videos/"+nome,'./temp/').on("end", function() {
+								console.log("terminou os cortes");
+								showNotification("Download Concluido", "O Download do video " + nome + " foi finalizado com sucesso", icone);
+							})
+						})
+
+						
+					} else {
+						ffmpeg('./temp/video' + temp).addInput('./temp/audio' + temp).save("./Videos/"+nome).on("end", function() {
+							showNotification("Download Concluido", "O Download do video " + nome + " foi finalizado com sucesso", icone);
+							fs.unlink('./temp/video' + temp,() => {})
+							fs.unlink('./temp/audio' + temp,() => {})
+						})
+					}
 				})
 			}
 		})

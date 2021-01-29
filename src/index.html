@@ -52,7 +52,7 @@
                         </div>
                         <br>
                         <div class="form-group">
-                            <textarea class="form-control body-url-input" rows="2"></textarea>
+                            <textarea class="form-control body-url-input" id="cortes" placeholder="Descreva aqui os cortes que devem ser feitos no video, exemplo: 00:00:00-00:00:10;00:01:20-00:01:40;00:01:50-00:02:00" rows="2"></textarea>
                         </div>
                     </div>
                 </div>
@@ -125,7 +125,8 @@
             let videoFormatId = $("#formats").val();
             let format = $("#formats option:selected").text()
             format = format.substring(format.length-3)
-            ipcRenderer.send('downloadVideo',{ "url":videoUrl, "id": videoId, "format_id": videoFormatId, "format":format});
+            let cortes = $("#cortes").val();
+            ipcRenderer.send('downloadVideo',{ "url":videoUrl, "id": videoId, "format_id": videoFormatId, "format":format, "cortes": cortes });
         }
     </script>
 </html>
