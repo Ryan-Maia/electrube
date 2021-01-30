@@ -3,3 +3,4 @@ videos/*
 ffmpeg
 temp/*
 imagens/*
+./package-lock.json
