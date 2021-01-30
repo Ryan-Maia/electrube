@@ -211,7 +211,8 @@ function downloadVideo(data) {
 								let inicio = moment("1111-11-11 " + corte[0])
 								let fim = moment("1111-11-11 " + corte[1])
 								let diff = fim.diff(inicio);
-								let duracao = moment.utc(diff).format("HH:mm:ss");
+								let duracao = moment.utc(diff).format("HH:mm:ss.SSS");
+								console.log("====DURAÇÃO:",duracao);
 
 								//console.log('corte na posicao 0: '+corte[0]);
 								//console.log('duracao: '+ duracao);
